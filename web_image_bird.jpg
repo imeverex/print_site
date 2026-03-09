@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brandon Deurbrouck</title>
+  <meta name="description" content="Brandon Deurbrouck — Photographer. Original prints available." />
+  <meta property="og:title" content="Brandon Deurbrouck" />
+  <meta property="og:description" content="Photography & original prints." />
+  <meta property="og:url" content="https://www.brandondeurbrouck.com" />
+  <link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/main.css" />
+</head>
+<body>
+
+  <!-- NOISE OVERLAY -->
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="/" class="nav-logo">BD<span class="nav-logo-dot">.</span></a>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#prints" class="nav-link-highlight">Prints</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <div class="ham-line"></div>
+      <div class="ham-line"></div>
+      <div class="ham-line"></div>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mob-menu" id="mobMenu">
+    <a href="#work" onclick="closeMenu()">Work</a>
+    <a href="#prints" onclick="closeMenu()">Prints</a>
+    <a href="#about" onclick="closeMenu()">About</a>
+    <a href="#contact" onclick="closeMenu()">Contact</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-grid-lines" aria-hidden="true">
+      <div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <div class="hero-tag">Portfolio — 2025</div>
+    <h1 class="hero-title">
+      <span class="hero-line" data-text="BRANDON">BRANDON</span>
+      <span class="hero-line hero-line--accent" data-text="DEUR—">DEUR—</span>
+      <span class="hero-line" data-text="BROUCK">BROUCK</span>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">Photographer & visual artist.<br/>Original prints shipped worldwide.</p>
+      <div class="hero-actions">
+        <a href="#work" class="btn btn--fill">View Work</a>
+        <a href="#prints" class="btn btn--outline">Shop Prints</a>
+      </div>
+    </div>
+    <div class="hero-counter" id="heroCounter">001</div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>PHOTOGRAPHY</span><span class="sep">✦</span>
+      <span>ORIGINAL PRINTS</span><span class="sep">✦</span>
+      <span>BRANDON DEURBROUCK</span><span class="sep">✦</span>
+      <span>WORLDWIDE SHIPPING</span><span class="sep">✦</span>
+      <span>PHOTOGRAPHY</span><span class="sep">✦</span>
+      <span>ORIGINAL PRINTS</span><span class="sep">✦</span>
+      <span>BRANDON DEURBROUCK</span><span class="sep">✦</span>
+      <span>WORLDWIDE SHIPPING</span><span class="sep">✦</span>
+      <span>PHOTOGRAPHY</span><span class="sep">✦</span>
+      <span>ORIGINAL PRINTS</span><span class="sep">✦</span>
+      <span>BRANDON DEURBROUCK</span><span class="sep">✦</span>
+      <span>WORLDWIDE SHIPPING</span><span class="sep">✦</span>
+    </div>
+  </div>
+
+  <!-- WORK -->
+  <section class="work" id="work">
+    <div class="section-label">
+      <span class="label-num">01</span>
+      <span class="label-text">SELECTED WORK</span>
+    </div>
+
+    <div class="work-grid">
+      <!-- Row 1 -->
+      <div class="wg-item wg-item--wide reveal">
+        <img src="/public/images/photo-1.jpg" alt="Photo 1" loading="lazy" />
+        <div class="wg-hover">
+          <span class="wg-cat">Portrait</span>
+        </div>
+      </div>
+      <div class="wg-item wg-item--tall reveal" style="--rd:.1s">
+        <img src="/public/images/photo-2.jpg" alt="Photo 2" loading="lazy" />
+        <div class="wg-hover">
+          <span class="wg-cat">Landscape</span>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="wg-item reveal" style="--rd:.05s">
+        <img src="/public/images/photo-3.jpg" alt="Photo 3" loading="lazy" />
+        <div class="wg-hover"><span class="wg-cat">Street</span></div>
+      </div>
+      <div class="wg-item reveal" style="--rd:.15s">
+        <img src="/public/images/photo-4.jpg" alt="Photo 4" loading="lazy" />
+        <div class="wg-hover"><span class="wg-cat">Editorial</span></div>
+      </div>
+      <div class="wg-item wg-item--accent reveal" style="--rd:.2s">
+        <div class="wg-accent-content">
+          <span>120+</span>
+          <p>Projects completed</p>
+        </div>
+      </div>
+
+      <!-- Row 3: masonry strip -->
+      <div class="wg-item reveal" style="--rd:.0s">
+        <img src="/public/images/photo-5.jpg" alt="Photo 5" loading="lazy" />
+        <div class="wg-hover"><span class="wg-cat">Fine Art</span></div>
+      </div>
+      <div class="wg-item wg-item--wide reveal" style="--rd:.08s">
+        <img src="/public/images/photo-6.jpg" alt="Photo 6" loading="lazy" />
+        <div class="wg-hover"><span class="wg-cat">Portrait</span></div>
+      </div>
+      <div class="wg-item reveal" style="--rd:.12s">
+        <img src="/public/images/photo-7.jpg" alt="Photo 7" loading="lazy" />
+        <div class="wg-hover"><span class="wg-cat">Landscape</span></div>
+      </div>
+    </div>
+
+    <!-- Gallery row -->
+    <div class="gallery-strip">
+      <div class="gs-item reveal" style="--rd:.0s"><img src="/public/images/photo-8.jpg" alt="Photo 8" loading="lazy" /></div>
+      <div class="gs-item reveal" style="--rd:.06s"><img src="/public/images/photo-9.jpg" alt="Photo 9" loading="lazy" /></div>
+      <div class="gs-item reveal" style="--rd:.12s"><img src="/public/images/photo-10.jpg" alt="Photo 10" loading="lazy" /></div>
+      <div class="gs-item reveal" style="--rd:.18s"><img src="/public/images/photo-11.jpg" alt="Photo 11" loading="lazy" /></div>
+      <div class="gs-item reveal" style="--rd:.24s"><img src="/public/images/photo-12.jpg" alt="Photo 12" loading="lazy" /></div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose">✕</button>
+    <button class="lb-prev" id="lbPrev">‹</button>
+    <button class="lb-next" id="lbNext">›</button>
+    <img class="lb-img" id="lbImg" src="" alt="" />
+    <div class="lb-count" id="lbCount"></div>
+  </div>
+
+  <!-- PRINTS SHOP -->
+  <section class="prints" id="prints">
+    <div class="section-label">
+      <span class="label-num">02</span>
+      <span class="label-text">SHOP PRINTS</span>
+    </div>
+    <p class="prints-sub">Museum-quality Giclée prints on archival paper. Limited editions, signed & numbered.</p>
+
+    <div class="prints-grid">
+
+      <div class="print-card reveal">
+        <div class="print-img-wrap">
+          <img src="/public/images/print-1.jpg" alt="Print 1" loading="lazy" />
+          <div class="print-badge">ED. 25</div>
+        </div>
+        <div class="print-info">
+          <div class="print-meta">
+            <span class="print-title">Untitled No. 1</span>
+            <span class="print-price">$180</span>
+          </div>
+          <div class="print-sizes">
+            <button class="size-btn active" data-size='12"×16"'>12×16"</button>
+            <button class="size-btn" data-size='18"×24"'>18×24"</button>
+            <button class="size-btn" data-size='24"×36"'>24×36"</button>
+          </div>
+          <!-- Replace YOUR-SHOPIFY-STORE and VARIANT-ID with your actual Shopify details -->
+          <a href="https://YOUR-SHOPIFY-STORE.myshopify.com/products/untitled-no-1" target="_blank" rel="noopener" class="print-buy-btn">Buy Print →</a>
+        </div>
+      </div>
+
+      <div class="print-card reveal" style="--rd:.1s">
+        <div class="print-img-wrap">
+          <img src="/public/images/print-2.jpg" alt="Print 2" loading="lazy" />
+          <div class="print-badge">ED. 10</div>
+        </div>
+        <div class="print-info">
+          <div class="print-meta">
+            <span class="print-title">Untitled No. 2</span>
+            <span class="print-price">$240</span>
+          </div>
+          <div class="print-sizes">
+            <button class="size-btn active" data-size='12"×16"'>12×16"</button>
+            <button class="size-btn" data-size='18"×24"'>18×24"</button>
+            <button class="size-btn" data-size='24"×36"'>24×36"</button>
+          </div>
+          <a href="https://YOUR-SHOPIFY-STORE.myshopify.com/products/untitled-no-2" target="_blank" rel="noopener" class="print-buy-btn">Buy Print →</a>
+        </div>
+      </div>
+
+      <div class="print-card reveal" style="--rd:.2s">
+        <div class="print-img-wrap">
+          <img src="/public/images/print-3.jpg" alt="Print 3" loading="lazy" />
+          <div class="print-badge sold-out">SOLD OUT</div>
+        </div>
+        <div class="print-info">
+          <div class="print-meta">
+            <span class="print-title">Untitled No. 3</span>
+            <span class="print-price">$320</span>
+          </div>
+          <div class="print-sizes">
+            <button class="size-btn active" data-size='18"×24"'>18×24"</button>
+            <button class="size-btn" data-size='24"×36"'>24×36"</button>
+          </div>
+          <a href="https://YOUR-SHOPIFY-STORE.myshopify.com/products/untitled-no-3" target="_blank" rel="noopener" class="print-buy-btn print-buy-btn--disabled">Sold Out</a>
+        </div>
+      </div>
+
+      <div class="print-card reveal" style="--rd:.3s">
+        <div class="print-img-wrap">
+          <img src="/public/images/print-4.jpg" alt="Print 4" loading="lazy" />
+          <div class="print-badge">ED. 15</div>
+        </div>
+        <div class="print-info">
+          <div class="print-meta">
+            <span class="print-title">Untitled No. 4</span>
+            <span class="print-price">$195</span>
+          </div>
+          <div class="print-sizes">
+            <button class="size-btn active" data-size='12"×16"'>12×16"</button>
+            <button class="size-btn" data-size='18"×24"'>18×24"</button>
+            <button class="size-btn" data-size='24"×36"'>24×36"</button>
+          </div>
+          <a href="https://YOUR-SHOPIFY-STORE.myshopify.com/products/untitled-no-4" target="_blank" rel="noopener" class="print-buy-btn">Buy Print →</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="prints-shopify-cta">
+      <span>See all prints in the full shop</span>
+      <a href="https://YOUR-SHOPIFY-STORE.myshopify.com" target="_blank" rel="noopener" class="btn btn--fill">Open Shop ↗</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="section-label">
+      <span class="label-num">03</span>
+      <span class="label-text">ABOUT</span>
+    </div>
+    <div class="about-grid">
+      <div class="about-img reveal">
+        <img src="/public/images/about.jpg" alt="Brandon Deurbrouck" />
+      </div>
+      <div class="about-text reveal" style="--rd:.1s">
+        <h2 class="about-heading">I SHOOT<br/><em>WHAT OTHERS</em><br/>WALK PAST.</h2>
+        <p>Based everywhere. Rooted in the belief that the most interesting frame is always one step off the obvious path.</p>
+        <p>My work spans portrait, street, landscape, and editorial — unified by a fascination with light, geometry, and the split second before everything changes.</p>
+        <div class="about-facts">
+          <div class="fact"><strong>08+</strong><span>Years</span></div>
+          <div class="fact"><strong>120+</strong><span>Projects</span></div>
+          <div class="fact"><strong>30+</strong><span>Exhibitions</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="section-label">
+      <span class="label-num">04</span>
+      <span class="label-text">CONTACT</span>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-left reveal">
+        <h2 class="contact-heading">LET'S<br/><span>WORK.</span></h2>
+        <a href="mailto:hello@brandondeurbrouck.com" class="contact-email">hello@brandondeurbrouck.com</a>
+        <div class="contact-socials">
+          <a href="https://instagram.com" target="_blank" rel="noopener">Instagram ↗</a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn ↗</a>
+        </div>
+      </div>
+      <form class="contact-form reveal" id="contactForm" onsubmit="handleSubmit(event)" style="--rd:.1s">
+        <div class="cf-row">
+          <div class="cf-group">
+            <label>Name</label>
+            <input type="text" name="name" required placeholder="Your name" />
+          </div>
+          <div class="cf-group">
+            <label>Email</label>
+            <input type="email" name="email" required placeholder="your@email.com" />
+          </div>
+        </div>
+        <div class="cf-group">
+          <label>Subject</label>
+          <input type="text" name="subject" placeholder="Commission, collab, print inquiry…" />
+        </div>
+        <div class="cf-group">
+          <label>Message</label>
+          <textarea name="message" rows="5" required placeholder="Tell me about your project…"></textarea>
+        </div>
+        <button type="submit" class="btn btn--fill cf-submit">Send It →</button>
+        <p class="cf-success" id="cfSuccess">Got it — I'll be in touch soon.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">BRANDON DEURBROUCK</div>
+    <div class="footer-right">
+      <span>© <span id="yr"></span></span>
+      <span>www.brandondeurbrouck.com</span>
+    </div>
+  </footer>
+
+  <script src="/src/main.js"></script>
+</body>
+</html>

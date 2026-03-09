@@ -1,0 +1,115 @@
+# Brandon Deurbrouck — Photography V2
+
+Bold · Graphic · Swiss-influenced · Chartreuse pop color
+
+## Stack
+- Pure HTML / CSS / JS — no build step, no framework
+- Fonts: Bebas Neue (display) + Barlow (body)
+- Color palette: Off-white `#F0EDE6` · Near-black `#111110` · Chartreuse `#E8FF3A`
+- Deployed via GitHub + Vercel
+
+---
+
+## Adding Your Photos
+
+Drop images into `/public/images/`:
+
+| File | Location |
+|------|----------|
+| `photo-1.jpg` | Work grid — wide left |
+| `photo-2.jpg` | Work grid — tall right |
+| `photo-3.jpg` through `photo-7.jpg` | Work grid tiles |
+| `photo-8.jpg` through `photo-12.jpg` | Gallery strip |
+| `print-1.jpg` through `print-4.jpg` | Print shop cards |
+| `about.jpg` | About section |
+
+**Tips:**
+- Work grid: landscape or square images work best for wide tiles; portrait for tall
+- Print cards: portrait orientation (3:4 ratio) looks sharpest
+- Minimum 1000px wide for crisp display
+
+---
+
+## Connecting Shopify
+
+### Option A — Link directly (simplest)
+In `index.html`, replace every `YOUR-SHOPIFY-STORE` with your actual Shopify subdomain and update the product slugs:
+
+```html
+<!-- Before -->
+<a href="https://YOUR-SHOPIFY-STORE.myshopify.com/products/untitled-no-1" ...>
+
+<!-- After -->
+<a href="https://brandondeurbrouck.myshopify.com/products/your-print-name" ...>
+```
+
+Each product URL comes from your Shopify admin → Products → click a product → copy the URL handle from the bottom of the page.
+
+### Option B — Shopify Buy Button (embed cart)
+1. In Shopify Admin → **Sales Channels → Buy Button**
+2. Create a Buy Button for each print
+3. Copy the embed code and replace the `<a class="print-buy-btn">` tags with Shopify's generated embed
+
+### Option C — Custom domain on Shopify + link
+If your prints shop lives at `shop.brandondeurbrouck.com`:
+1. Set up a subdomain on Vercel pointing to Shopify
+2. Update the "Open Shop ↗" button href to `https://shop.brandondeurbrouck.com`
+
+---
+
+## Updating Print Details
+
+In `index.html`, for each `.print-card`:
+- **Title**: update `<span class="print-title">Untitled No. X</span>`
+- **Price**: update `<span class="print-price">$XXX</span>`
+- **Edition size**: update `<div class="print-badge">ED. XX</div>`
+- **Sold out**: change badge to `<div class="print-badge sold-out">SOLD OUT</div>` and button to `class="print-buy-btn print-buy-btn--disabled"`
+- **Sizes**: update or remove `.size-btn` elements to match what you offer
+
+---
+
+## Contact Form (replace with real backend)
+
+Currently simulates a send. Replace `handleSubmit` in `/src/main.js` with:
+
+**Formspree** (free, easy):
+```html
+<form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+```
+Remove the `onsubmit="handleSubmit(event)"` attribute.
+
+---
+
+## Deploy
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/YOUR_USERNAME/brandon-photography.git
+git push -u origin main
+```
+
+Then import on vercel.com → New Project → Framework: Other → Deploy.
+Since your domain is registered with Vercel, adding `www.brandondeurbrouck.com` in Settings → Domains will auto-configure DNS.
+
+---
+
+## File Structure
+```
+brandon-photo-v2/
+├── index.html
+├── vercel.json
+├── README.md
+├── public/
+│   ├── favicon.svg
+│   └── images/
+│       ├── photo-1.jpg  ← drop your photos here
+│       ├── ...
+│       ├── print-1.jpg  ← print shop images
+│       ├── ...
+│       └── about.jpg
+└── src/
+    ├── main.css
+    └── main.js
+```
