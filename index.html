@@ -1,115 +1,1813 @@
-# Brandon Deurbrouck — Photography V2
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Brandon Deurbrouck — Fine Art Photography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-Bold · Graphic · Swiss-influenced · Chartreuse pop color
+  :root {
+    --bg:       #060a10;
+    --bg2:      #0a1018;
+    --bg3:      #0e1622;
+    --teal:     #3dd6c8;
+    --teal2:    #1a9e94;
+    --magenta:  #d43d8c;
+    --aurora:   #c44bc8;
+    --steel:    #8aa4be;
+    --mist:     #b8ccd8;
+    --snow:     #e8f0f5;
+    --red-neon: #ff2d3a;
+    --text:     #dce8f0;
+    --dim:      #5a7088;
+  }
 
-## Stack
-- Pure HTML / CSS / JS — no build step, no framework
-- Fonts: Bebas Neue (display) + Barlow (body)
-- Color palette: Off-white `#F0EDE6` · Near-black `#111110` · Chartreuse `#E8FF3A`
-- Deployed via GitHub + Vercel
+  html { scroll-behavior: smooth; }
 
----
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Staatliches', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
 
-## Adding Your Photos
+  /* ─── CURSOR ─── */
+  .cursor-dot {
+    width: 8px; height: 8px;
+    background: var(--teal);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s ease, background 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(61,214,200,0.5);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, border-color 0.2s, width 0.2s, height 0.2s;
+  }
 
-Drop images into `/public/images/`:
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 9990;
+  }
 
-| File | Location |
-|------|----------|
-| `photo-1.jpg` | Work grid — wide left |
-| `photo-2.jpg` | Work grid — tall right |
-| `photo-3.jpg` through `photo-7.jpg` | Work grid tiles |
-| `photo-8.jpg` through `photo-12.jpg` | Gallery strip |
-| `print-1.jpg` through `print-4.jpg` | Print shop cards |
-| `about.jpg` | About section |
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 22px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    backdrop-filter: blur(18px) saturate(1.5);
+    background: rgba(6,10,16,0.75);
+    border-bottom: 1px solid rgba(61,214,200,0.07);
+    transition: background 0.3s, padding 0.3s;
+  }
+  nav.scrolled { padding: 14px 48px; background: rgba(6,10,16,0.95); }
 
-**Tips:**
-- Work grid: landscape or square images work best for wide tiles; portrait for tall
-- Print cards: portrait orientation (3:4 ratio) looks sharpest
-- Minimum 1000px wide for crisp display
+  .nav-logo {
+    font-family: 'Staatliches', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    color: var(--snow);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--teal); }
 
----
+  .nav-links {
+    display: flex; gap: 36px; list-style: none; align-items: center;
+  }
+  .nav-links a {
+    font-family: 'Staatliches', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--steel);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px;
+    background: var(--teal); transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--snow); }
+  .nav-links a:hover::after { width: 100%; }
 
-## Connecting Shopify
+  .nav-cart {
+    display: flex; align-items: center; gap: 8px;
+    background: none; border: 1px solid rgba(61,214,200,0.3);
+    color: var(--teal);
+    font-family: 'Staatliches', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 8px 18px; border-radius: 2px; cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-cart:hover { background: var(--teal); color: var(--bg); }
+  .cart-count {
+    background: var(--magenta); color: white;
+    font-size: 0.68rem; font-weight: 600;
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    display: none;
+  }
+  .cart-count.active { display: flex; }
 
-### Option A — Link directly (simplest)
-In `index.html`, replace every `YOUR-SHOPIFY-STORE` with your actual Shopify subdomain and update the product slugs:
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 80px;
+    overflow: hidden;
+  }
 
-```html
-<!-- Before -->
-<a href="https://YOUR-SHOPIFY-STORE.myshopify.com/products/untitled-no-1" ...>
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 85%, rgba(212,61,140,0.22) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 20% 50%, rgba(61,214,200,0.12) 0%, transparent 55%),
+      linear-gradient(175deg, #060e18 0%, #040810 40%, #0a0616 80%, #060a10 100%);
+  }
 
-<!-- After -->
-<a href="https://brandondeurbrouck.myshopify.com/products/your-print-name" ...>
-```
+  /* Aurora effect */
+  .aurora {
+    position: absolute; inset: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .aurora-band {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+  .aurora-band:nth-child(1) {
+    width: 70vw; height: 30vh;
+    top: 30%; left: -10%;
+    background: radial-gradient(ellipse, rgba(61,214,200,0.18) 0%, transparent 70%);
+    animation-delay: 0s;
+  }
+  .aurora-band:nth-child(2) {
+    width: 50vw; height: 40vh;
+    top: 20%; right: -5%;
+    background: radial-gradient(ellipse, rgba(196,75,200,0.15) 0%, transparent 70%);
+    animation-delay: -4s;
+  }
+  .aurora-band:nth-child(3) {
+    width: 80vw; height: 25vh;
+    top: 55%; left: 10%;
+    background: radial-gradient(ellipse, rgba(212,61,140,0.12) 0%, transparent 70%);
+    animation-delay: -8s;
+  }
+  @keyframes drift {
+    0%   { transform: translateX(0) translateY(0) scaleX(1); opacity: 0.7; }
+    50%  { transform: translateX(3vw) translateY(-2vh) scaleX(1.05); opacity: 1; }
+    100% { transform: translateX(-2vw) translateY(1vh) scaleX(0.95); opacity: 0.6; }
+  }
 
-Each product URL comes from your Shopify admin → Products → click a product → copy the URL handle from the bottom of the page.
+  /* Mountain silhouette */
+  .hero-mountain {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 45%;
+    background:
+      radial-gradient(ellipse 100% 100% at 50% 100%, rgba(4,8,16,0.98) 30%, transparent 100%),
+      linear-gradient(to top, #040810 0%, transparent 100%);
+    clip-path: polygon(0% 100%, 0% 72%, 8% 60%, 15% 68%, 22% 45%, 30% 58%, 38% 38%, 45% 52%, 52% 30%, 60% 48%, 67% 35%, 74% 50%, 80% 40%, 87% 55%, 94% 42%, 100% 60%, 100% 100%);
+    z-index: 1;
+  }
 
-### Option B — Shopify Buy Button (embed cart)
-1. In Shopify Admin → **Sales Channels → Buy Button**
-2. Create a Buy Button for each print
-3. Copy the embed code and replace the `<a class="print-buy-btn">` tags with Shopify's generated embed
+  /* Reflection */
+  .hero-reflection {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 25%;
+    background: linear-gradient(to top,
+      rgba(61,214,200,0.04) 0%,
+      rgba(212,61,140,0.06) 30%,
+      transparent 100%);
+    z-index: 2;
+  }
 
-### Option C — Custom domain on Shopify + link
-If your prints shop lives at `shop.brandondeurbrouck.com`:
-1. Set up a subdomain on Vercel pointing to Shopify
-2. Update the "Open Shop ↗" button href to `https://shop.brandondeurbrouck.com`
+  /* Stars */
+  .stars-canvas {
+    position: absolute; inset: 0; z-index: 0;
+  }
 
----
+  .hero-content {
+    position: relative; z-index: 10;
+    max-width: 900px;
+    animation: heroIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-## Updating Print Details
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; letter-spacing: 0.32em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block;
+    width: 40px; height: 1px; background: var(--teal);
+  }
 
-In `index.html`, for each `.print-card`:
-- **Title**: update `<span class="print-title">Untitled No. X</span>`
-- **Price**: update `<span class="print-price">$XXX</span>`
-- **Edition size**: update `<div class="print-badge">ED. XX</div>`
-- **Sold out**: change badge to `<div class="print-badge sold-out">SOLD OUT</div>` and button to `class="print-buy-btn print-buy-btn--disabled"`
-- **Sizes**: update or remove `.size-btn` elements to match what you offer
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3.5rem, 9vw, 9rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--snow);
+    margin-bottom: 28px;
+  }
+  .hero-title .accent { color: var(--teal); }
+  .hero-title .accent2 { color: var(--magenta); }
 
----
+  .hero-sub {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--steel);
+    line-height: 1.6;
+    max-width: 480px;
+    margin-bottom: 44px;
+  }
 
-## Contact Form (replace with real backend)
+  .hero-actions {
+    display: flex; gap: 16px; align-items: center;
+  }
 
-Currently simulates a send. Replace `handleSubmit` in `/src/main.js` with:
+  .btn-primary {
+    background: var(--teal);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.82rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 14px 36px; border: none;
+    cursor: pointer; text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+  .btn-primary:hover {
+    background: #5eeee4;
+    box-shadow: 0 0 40px rgba(61,214,200,0.35);
+    transform: translateY(-2px);
+  }
 
-**Formspree** (free, easy):
-```html
-<form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-```
-Remove the `onsubmit="handleSubmit(event)"` attribute.
+  .btn-ghost {
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--mist);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.82rem; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 14px 36px; background: none; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
 
----
+  .hero-stats {
+    position: absolute;
+    right: 48px; bottom: 80px;
+    z-index: 10;
+    display: flex; flex-direction: column; gap: 24px;
+    animation: heroIn 1.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.2s;
+  }
+  .stat {
+    text-align: right;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 2rem;
+    color: var(--snow); line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--dim);
+  }
 
-## Deploy
+  .scroll-line {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--teal));
+    z-index: 10;
+    animation: scrollDrop 2s ease-in-out infinite;
+  }
+  @keyframes scrollDrop {
+    0%, 100% { opacity: 0.3; transform: translateX(-50%) scaleY(0.8); }
+    50%       { opacity: 1;   transform: translateX(-50%) scaleY(1); }
+  }
 
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/YOUR_USERNAME/brandon-photography.git
-git push -u origin main
-```
+  /* ─── SECTION HEADERS ─── */
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.32em;
+    text-transform: uppercase; color: var(--teal);
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 14px;
+  }
+  .section-label::before {
+    content: ''; display: block;
+    width: 28px; height: 1px; background: var(--teal);
+  }
 
-Then import on vercel.com → New Project → Framework: Other → Deploy.
-Since your domain is registered with Vercel, adding `www.brandondeurbrouck.com` in Settings → Domains will auto-configure DNS.
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    color: var(--snow);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
 
----
+  /* ─── PORTFOLIO ─── */
+  #portfolio {
+    padding: 120px 48px;
+    background: var(--bg);
+  }
 
-## File Structure
-```
-brandon-photo-v2/
-├── index.html
-├── vercel.json
-├── README.md
-├── public/
-│   ├── favicon.svg
-│   └── images/
-│       ├── photo-1.jpg  ← drop your photos here
-│       ├── ...
-│       ├── print-1.jpg  ← print shop images
-│       ├── ...
-│       └── about.jpg
-└── src/
-    ├── main.css
-    └── main.js
-```
+  .portfolio-header {
+    display: flex; align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 56px;
+  }
+
+  .filter-tabs {
+    display: flex; gap: 4px;
+  }
+  .filter-tab {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 8px 18px; background: none;
+    border: 1px solid transparent;
+    color: var(--dim); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-tab.active,
+  .filter-tab:hover {
+    border-color: rgba(61,214,200,0.4);
+    color: var(--teal);
+    background: rgba(61,214,200,0.06);
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    gap: 6px;
+  }
+
+  .p-item {
+    position: relative; overflow: hidden;
+    background: var(--bg3);
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .p-item:nth-child(1) { grid-column: 1 / 8; grid-row: 1 / 2; }
+  .p-item:nth-child(2) { grid-column: 8 / 13; grid-row: 1 / 2; }
+  .p-item:nth-child(3) { grid-column: 1 / 5; grid-row: 2 / 3; }
+  .p-item:nth-child(4) { grid-column: 5 / 9; grid-row: 2 / 3; }
+  .p-item:nth-child(5) { grid-column: 9 / 13; grid-row: 2 / 3; }
+  .p-item:nth-child(6) { grid-column: 1 / 13; grid-row: 3 / 4; }
+
+
+  .p-item:hover { transform: scale(1.01); z-index: 2; }
+
+  .p-img {
+    width: 100%; height: 380px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.4s;
+    filter: saturate(0.85);
+  }
+  .p-item:nth-child(1) .p-img,
+  .p-item:nth-child(2) .p-img { height: 480px; }
+
+  .p-item:hover .p-img {
+    transform: scale(1.05);
+    filter: saturate(1.1);
+  }
+
+  /* CSS gradient photo placeholders matching your actual photos */
+  .photo-alpine {
+    background: linear-gradient(160deg,
+      #c8d8d5 0%, #9ab8bc 15%, #4a8e8c 30%,
+      #2d6b6a 45%, #1c3d2e 60%, #1a2e24 75%, #0e1a14 100%);
+    width: 100%; display: block;
+  }
+  .photo-lake {
+    background: linear-gradient(180deg,
+      #7898b8 0%, #6080a8 20%, #8898ac 35%,
+      #3c5068 55%, #2c4058 70%, #1c2c3c 85%, #0e1820 100%);
+    width: 100%; display: block;
+  }
+  .photo-aurora {
+    background: radial-gradient(ellipse 120% 80% at 50% 65%,
+      #d43d8c 0%, #c44bc8 20%, #6030a0 40%, transparent 65%),
+    linear-gradient(180deg,
+      #04081a 0%, #060c1e 40%, #08060e 60%, #040408 100%);
+    width: 100%; display: block;
+  }
+  .photo-neon {
+    background: radial-gradient(ellipse 60% 40% at 40% 65%,
+      #ff2d3a 0%, #cc1020 30%, transparent 65%),
+    linear-gradient(180deg, #020204 0%, #04060a 50%, #020204 100%);
+    width: 100%; display: block;
+  }
+  .photo-mountain2 {
+    background: linear-gradient(180deg,
+      #4060a8 0%, #5878b0 15%, #8898c0 30%,
+      #2a3c58 50%, #1a2840 70%, #0c1828 100%);
+    width: 100%; display: block;
+  }
+
+  .p-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(4,8,16,0.85) 0%, transparent 55%);
+    opacity: 0; transition: opacity 0.4s;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 28px;
+  }
+  .p-item:hover .p-overlay { opacity: 1; }
+
+  .p-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1.1rem;
+    color: var(--snow); margin-bottom: 4px;
+    transform: translateY(10px); transition: transform 0.4s;
+  }
+  .p-meta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--teal);
+    transform: translateY(10px); transition: transform 0.4s 0.05s;
+  }
+  .p-item:hover .p-title,
+  .p-item:hover .p-meta { transform: translateY(0); }
+
+  .p-tag {
+    position: absolute; top: 16px; right: 16px;
+    background: rgba(6,10,16,0.8); backdrop-filter: blur(8px);
+    border: 1px solid rgba(61,214,200,0.3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--teal); padding: 5px 12px;
+  }
+
+  /* ─── PROCESS STRIP ─── */
+  .process-strip {
+    background: var(--bg3);
+    border-top: 1px solid rgba(61,214,200,0.08);
+    border-bottom: 1px solid rgba(61,214,200,0.08);
+    padding: 40px 48px;
+    display: flex; gap: 0;
+    overflow: hidden;
+  }
+  .process-item {
+    flex: 1; padding: 0 40px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; gap: 20px;
+  }
+  .process-item:last-child { border-right: none; }
+  .process-icon {
+    font-size: 1.8rem; flex-shrink: 0;
+    filter: grayscale(0.2);
+  }
+  .process-text strong {
+    display: block;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 0.92rem;
+    color: var(--snow); margin-bottom: 3px;
+  }
+  .process-text span {
+    font-size: 0.82rem; color: var(--dim);
+  }
+
+  /* ─── SHOP ─── */
+  #shop {
+    padding: 120px 48px;
+    background: var(--bg2);
+  }
+
+  .shop-intro {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: end;
+    margin-bottom: 64px;
+  }
+
+  .shop-desc {
+    font-size: 1rem; color: var(--steel); line-height: 1.7;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2px;
+  }
+
+  .product-card {
+    background: var(--bg3);
+    position: relative; overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  .product-card:hover { transform: translateY(-4px); }
+
+  .product-img-wrap {
+    position: relative; overflow: hidden;
+  }
+  .product-img {
+    width: 100%; height: 320px;
+    object-fit: cover; display: block;
+    transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), filter 0.4s;
+    filter: saturate(0.8) brightness(0.95);
+  }
+  .product-card:hover .product-img {
+    transform: scale(1.06);
+    filter: saturate(1.05) brightness(1);
+  }
+
+  .product-badge {
+    position: absolute; top: 14px; left: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 5px 12px;
+  }
+  .badge-limited {
+    background: var(--magenta); color: white;
+  }
+  .badge-new {
+    background: var(--teal); color: var(--bg);
+  }
+  .badge-sold {
+    background: rgba(255,255,255,0.1); color: var(--dim);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .product-info {
+    padding: 22px 24px 26px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+  .product-category {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 6px;
+  }
+  .product-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 1rem;
+    color: var(--snow); margin-bottom: 4px;
+  }
+  .product-edition {
+    font-size: 0.78rem; color: var(--dim); margin-bottom: 16px;
+  }
+
+  .product-footer {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .product-price {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1.2rem;
+    color: var(--snow);
+  }
+  .product-price-sub {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.75rem; color: var(--dim);
+    margin-top: 1px;
+  }
+
+  .add-to-cart {
+    background: none;
+    border: 1px solid rgba(61,214,200,0.35);
+    color: var(--teal);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 9px 18px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .add-to-cart:hover {
+    background: var(--teal); color: var(--bg);
+    box-shadow: 0 0 24px rgba(61,214,200,0.3);
+  }
+  .add-to-cart:disabled {
+    border-color: rgba(255,255,255,0.1);
+    color: var(--dim); cursor: not-allowed;
+  }
+
+  /* ─── ABOUT ─── */
+  #about {
+    padding: 120px 48px;
+    background: var(--bg);
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 100px; align-items: center;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+  .about-photo-main {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: linear-gradient(135deg,
+      #2a4a4e 0%, #1c3038 30%,
+      #0e1c24 60%, #060c14 100%);
+    position: relative; overflow: hidden;
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 90% 100%, 0 100%);
+  }
+  .about-photo-main::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 40% 60%,
+      rgba(61,214,200,0.15) 0%, transparent 60%);
+  }
+  .about-accent-box {
+    position: absolute; bottom: -24px; right: -24px;
+    width: 160px; height: 160px;
+    border: 2px solid rgba(61,214,200,0.25);
+    background: rgba(61,214,200,0.04);
+    backdrop-filter: blur(10px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    gap: 4px;
+  }
+  .about-accent-box strong {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 2.4rem;
+    color: var(--teal); line-height: 1;
+  }
+  .about-accent-box span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--dim);
+  }
+  .about-geo-line {
+    position: absolute; top: 30px; left: -30px;
+    width: 1px; height: 100px;
+    background: linear-gradient(to bottom, transparent, var(--magenta), transparent);
+  }
+
+  .about-text .section-label { margin-bottom: 16px; }
+  .about-body {
+    font-size: 1.02rem; color: var(--steel);
+    line-height: 1.8; margin: 24px 0 32px;
+  }
+  .about-body strong { color: var(--mist); font-weight: 400; }
+
+  .about-tags {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px;
+  }
+  .tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 7px 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--steel);
+  }
+
+  /* ─── TESTIMONIALS ─── */
+  #reviews {
+    padding: 100px 48px;
+    background: var(--bg2);
+  }
+
+  .reviews-header {
+    text-align: center; margin-bottom: 64px;
+  }
+  .reviews-header .section-label {
+    justify-content: center;
+  }
+  .reviews-header .section-label::before { display: none; }
+
+  .reviews-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 2px;
+  }
+
+  .review-card {
+    background: var(--bg3);
+    padding: 40px 36px;
+    position: relative; overflow: hidden;
+    transition: background 0.3s;
+  }
+  .review-card:hover { background: #111a24; }
+  .review-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, var(--teal), var(--magenta));
+    transform: scaleX(0); transition: transform 0.4s;
+    transform-origin: left;
+  }
+  .review-card:hover::before { transform: scaleX(1); }
+
+  .review-stars {
+    color: var(--teal); font-size: 0.85rem;
+    letter-spacing: 3px; margin-bottom: 20px;
+  }
+  .review-text {
+    font-size: 0.95rem; line-height: 1.75;
+    color: var(--steel); margin-bottom: 28px;
+    font-style: italic;
+  }
+  .review-author {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .review-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg2); border: 1px solid rgba(61,214,200,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.8rem; color: var(--teal);
+  }
+  .review-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 0.88rem; color: var(--snow);
+  }
+  .review-loc {
+    font-size: 0.75rem; color: var(--dim);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── CONTACT ─── */
+  #contact {
+    padding: 120px 48px;
+    background: var(--bg);
+    display: grid; grid-template-columns: 1.2fr 1fr;
+    gap: 100px;
+  }
+
+  .contact-left .section-title {
+    margin: 14px 0 24px;
+  }
+  .contact-left p {
+    font-size: 0.95rem; color: var(--steel);
+    line-height: 1.75; margin-bottom: 40px;
+  }
+  .contact-info-item {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 16px;
+  }
+  .contact-info-icon {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(61,214,200,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+    color: var(--teal);
+  }
+  .contact-info-text {
+    font-size: 0.9rem; color: var(--steel);
+  }
+
+  .contact-form {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-group {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .form-group label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--dim);
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem; font-weight: 300;
+    padding: 13px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+    appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--teal);
+    background: rgba(61,214,200,0.03);
+  }
+  .form-group select option { background: var(--bg3); }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+
+  .form-submit {
+    background: var(--teal);
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.85rem;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    padding: 16px 40px; border: none; cursor: pointer;
+    align-self: flex-start;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+  .form-submit:hover {
+    background: #5eeee4;
+    box-shadow: 0 0 40px rgba(61,214,200,0.3);
+    transform: translateY(-2px);
+  }
+
+  .form-success {
+    display: none;
+    background: rgba(61,214,200,0.08);
+    border: 1px solid rgba(61,214,200,0.3);
+    padding: 20px 24px;
+    color: var(--teal);
+    font-size: 0.9rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--bg3);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 60px 48px 40px;
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 60px;
+  }
+
+  .footer-brand .nav-logo {
+    display: block; margin-bottom: 16px;
+    font-size: 1.8rem;
+  }
+  .footer-brand p {
+    font-size: 0.85rem; color: var(--dim);
+    line-height: 1.7; margin-bottom: 24px;
+  }
+  .social-links { display: flex; gap: 10px; }
+  .social-link {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--dim); text-decoration: none; font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .social-link:hover {
+    border-color: var(--teal); color: var(--teal);
+    background: rgba(61,214,200,0.08);
+  }
+
+  .footer-col h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 0.82rem;
+    color: var(--snow); letter-spacing: 0.05em;
+    margin-bottom: 20px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .footer-col a {
+    font-size: 0.83rem; color: var(--dim);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--teal); }
+
+  .footer-bottom {
+    grid-column: 1 / -1;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 28px; margin-top: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-bottom p {
+    font-size: 0.78rem; color: var(--dim);
+  }
+  .footer-bottom a { color: var(--teal); text-decoration: none; }
+
+  /* ─── LIGHTBOX ─── */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(4,8,16,0.96);
+    backdrop-filter: blur(20px);
+    z-index: 9000;
+    display: none; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .lightbox.open { display: flex; opacity: 1; }
+  .lightbox-close {
+    position: absolute; top: 28px; right: 36px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--steel); background: none; border: none; cursor: pointer;
+    transition: color 0.2s;
+  }
+  .lightbox-close:hover { color: var(--teal); }
+  .lightbox-content {
+    max-width: 85vw; max-height: 85vh;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .lightbox-img-container {
+    width: 100%; max-height: 70vh;
+    overflow: hidden; position: relative;
+  }
+
+  /* ─── CART DRAWER ─── */
+  .cart-drawer {
+    position: fixed; top: 0; right: -420px; width: 420px; height: 100vh;
+    background: var(--bg3); z-index: 2000;
+    border-left: 1px solid rgba(61,214,200,0.1);
+    transition: right 0.4s cubic-bezier(0.16,1,0.3,1);
+    display: flex; flex-direction: column;
+    box-shadow: -20px 0 80px rgba(0,0,0,0.5);
+  }
+  .cart-drawer.open { right: 0; }
+
+  .cart-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 1999; display: none; backdrop-filter: blur(4px);
+  }
+  .cart-backdrop.open { display: block; }
+
+  .cart-header {
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cart-header h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1rem; color: var(--snow);
+  }
+  .cart-close-btn {
+    background: none; border: none; color: var(--dim);
+    font-size: 1.2rem; cursor: pointer; transition: color 0.2s;
+  }
+  .cart-close-btn:hover { color: var(--teal); }
+
+  .cart-items { flex: 1; overflow-y: auto; padding: 20px 28px; }
+  .cart-empty {
+    text-align: center; padding: 60px 0;
+    font-size: 0.9rem; color: var(--dim);
+  }
+  .cart-item {
+    display: grid; grid-template-columns: 64px 1fr auto;
+    gap: 16px; align-items: center;
+    padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .cart-item-img {
+    width: 64px; height: 64px; object-fit: cover;
+    background: var(--bg2);
+  }
+  .cart-item-name {
+    font-family: 'Syne', sans-serif; font-weight: 600;
+    font-size: 0.85rem; color: var(--snow);
+  }
+  .cart-item-sub {
+    font-size: 0.75rem; color: var(--dim); margin-top: 3px;
+  }
+  .cart-item-price {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    color: var(--teal); font-size: 0.95rem;
+  }
+
+  .cart-footer {
+    padding: 20px 28px 28px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .cart-total {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+  }
+  .cart-total span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--dim);
+  }
+  .cart-total strong {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.4rem; color: var(--snow);
+  }
+  .checkout-btn {
+    width: 100%; background: var(--teal); color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.82rem; letter-spacing: 0.22em;
+    text-transform: uppercase; padding: 16px;
+    border: none; cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .checkout-btn:hover {
+    background: #5eeee4;
+    box-shadow: 0 0 30px rgba(61,214,200,0.3);
+  }
+
+  /* ─── REVEAL ANIMATIONS ─── */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1),
+                transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--bg3); border: 1px solid rgba(61,214,200,0.35);
+    color: var(--snow);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.82rem; letter-spacing: 0.14em;
+    padding: 14px 28px; z-index: 9990;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    pointer-events: none;
+  }
+  .toast span { color: var(--teal); }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    nav { padding: 20px 28px; }
+    .hero { padding: 0 28px 80px; }
+    .hero-stats { right: 28px; }
+    #portfolio, #shop, #contact { padding: 80px 28px; }
+    footer { padding: 50px 28px 32px; grid-template-columns: 1fr 1fr; }
+    #about { padding: 80px 28px; grid-template-columns: 1fr; gap: 48px; }
+    #reviews { padding: 80px 28px; }
+    .reviews-grid { grid-template-columns: 1fr 1fr; }
+    .process-strip { padding: 30px 28px; flex-wrap: wrap; gap: 20px; }
+    .process-item { border-right: none; flex: calc(50% - 10px); }
+    .shop-intro { grid-template-columns: 1fr; gap: 20px; }
+    #contact { grid-template-columns: 1fr; gap: 48px; }
+    .portfolio-grid { grid-template-columns: 1fr 1fr; }
+    .p-item:nth-child(1),
+    .p-item:nth-child(2),
+    .p-item:nth-child(3),
+    .p-item:nth-child(4),
+    .p-item:nth-child(5),
+    .p-item:nth-child(6) { grid-column: auto; grid-row: auto; }
+    .p-img,
+    .p-item:nth-child(1) .p-img,
+    .p-item:nth-child(2) .p-img { height: 280px; }
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 0 20px 72px; }
+    .hero-stats { display: none; }
+    #portfolio, #shop, #reviews, #contact { padding: 60px 20px; }
+    .portfolio-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .reviews-grid { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr; padding: 40px 20px 28px; gap: 36px; }
+    .form-row { grid-template-columns: 1fr; }
+    .cart-drawer { width: 100%; right: -100%; }
+    .process-item { flex: 100%; }
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(61,214,200,0.3); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Added <span id="toastItem"></span> to cart</div>
+
+<!-- Cart backdrop -->
+<div class="cart-backdrop" id="cartBackdrop" onclick="closeCart()"></div>
+
+<!-- Cart Drawer -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>Your Collection</h3>
+    <button class="cart-close-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">Your cart is empty</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total</span>
+      <strong id="cartTotal">$0</strong>
+    </div>
+    <button class="checkout-btn" onclick="alert('Checkout coming soon!')">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Brandon <span>Deurbrouck</span></a>
+  <ul class="nav-links">
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#shop">Shop Prints</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cart" onclick="openCart()">
+    <span>🛒 Cart</span>
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="aurora">
+    <div class="aurora-band"></div>
+    <div class="aurora-band"></div>
+    <div class="aurora-band"></div>
+  </div>
+  <canvas class="stars-canvas" id="starsCanvas"></canvas>
+  <div class="hero-mountain"></div>
+  <div class="hero-reflection"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Fine Art Photography</div>
+    <h1 class="hero-title">
+      <span class="accent">Wilder</span><br>
+      Than <span class="accent2">Words</span>
+    </h1>
+    <p class="hero-sub">
+      Limited-edition prints of untouched wilderness, alpine silence, 
+      aurora-lit skies, and the raw edge of night. Every frame a moment 
+      that exists only once.
+    </p>
+    <div class="hero-actions">
+      <a href="#shop" class="btn-primary">Shop Prints</a>
+      <a href="#portfolio" class="btn-ghost">View Portfolio</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">47</div>
+      <div class="stat-label">Prints Sold</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">12</div>
+      <div class="stat-label">Collections</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Ed.25</div>
+      <div class="stat-label">Max Edition</div>
+    </div>
+  </div>
+
+  <div class="scroll-line"></div>
+</section>
+
+<!-- PROCESS STRIP -->
+<div class="process-strip">
+  <div class="process-item">
+    <div class="process-icon">🖨️</div>
+    <div class="process-text">
+      <strong>Museum-Grade Prints</strong>
+      <span>Giclée on fine art baryta paper</span>
+    </div>
+  </div>
+  <div class="process-item">
+    <div class="process-icon">🔢</div>
+    <div class="process-text">
+      <strong>Limited Editions</strong>
+      <span>Max 25 per image, hand-signed</span>
+    </div>
+  </div>
+  <div class="process-item">
+    <div class="process-icon">📦</div>
+    <div class="process-text">
+      <strong>Flat-Pack Shipping</strong>
+      <span>Archival packaging worldwide</span>
+    </div>
+  </div>
+  <div class="process-item">
+    <div class="process-icon">🔒</div>
+    <div class="process-text">
+      <strong>Certificate of Auth.</strong>
+      <span>Numbered & documented</span>
+    </div>
+  </div>
+</div>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="portfolio-header reveal">
+    <div>
+      <div class="section-label">Selected Work</div>
+      <h2 class="section-title">The Portfolio</h2>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterPortfolio('all', this)">All</button>
+      <button class="filter-tab" onclick="filterPortfolio('landscape', this)">Landscape</button>
+      <button class="filter-tab" onclick="filterPortfolio('night', this)">Night</button>
+      <button class="filter-tab" onclick="filterPortfolio('urban', this)">Urban</button>
+    </div>
+  </div>
+
+  <div class="portfolio-grid" id="portfolioGrid">
+    <div class="p-item reveal" data-cat="landscape" onclick="openLightbox('Water Reflection', 'Aurora-lit sky mirrored in still mountain waters')">
+      <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/water-reflection.jpg" class="p-img" style="height:480px" alt="Water Reflection">
+      <div class="p-overlay">
+        <div class="p-title">Water Reflection</div>
+        <div class="p-meta">Landscape · Long Exposure</div>
+      </div>
+      <span class="p-tag">Featured</span>
+    </div>
+    <div class="p-item reveal reveal-delay-1" data-cat="landscape" onclick="openLightbox('Milky Way Road', 'Milky Way rises above rolling hills with red light trails')">
+      <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/milky-way.jpg" class="p-img" style="height:480px" alt="Milky Way">
+      <div class="p-overlay">
+        <div class="p-title">Milky Way Road</div>
+        <div class="p-meta">Night Sky · Astro</div>
+      </div>
+    </div>
+    <div class="p-item reveal reveal-delay-2" data-cat="night" onclick="openLightbox('Aurora Reflection', 'Purple aurora and Milky Way reflecting in a mountain lake')">
+      <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/aurora-reflection.jpg" class="p-img" alt="Aurora Reflection">
+      <div class="p-overlay">
+        <div class="p-title">Aurora Reflection</div>
+        <div class="p-meta">Night Sky · Astro</div>
+      </div>
+      <span class="p-tag">3 Left</span>
+    </div>
+    <div class="p-item reveal reveal-delay-3" data-cat="urban" onclick="openLightbox('Circle K, 2 AM', 'Neon red against pitch dark — convenience and solitude')">
+      <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/circle-k.jpg" class="p-img" alt="Circle K 2AM">
+      <div class="p-overlay">
+        <div class="p-title">Circle K, 2 AM</div>
+        <div class="p-meta">Urban Noir · Neon</div>
+      </div>
+    </div>
+    <div class="p-item reveal reveal-delay-4" data-cat="landscape" onclick="openLightbox('Star Trails', 'Star trails arc above a lone boulder in the snow')">
+      <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/star-trails.jpg" class="p-img" alt="Star Trails">
+      <div class="p-overlay">
+        <div class="p-title">Star Trails</div>
+        <div class="p-meta">Night Sky · Long Exposure</div>
+      </div>
+    </div>
+    <div class="p-item reveal" data-cat="landscape" onclick="openLightbox('Birch Grove', 'Aspen trunks emerge from prairie grass against dark forest shadow')">
+      <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/birch-trees.jpg" class="p-img" style="height:340px; object-position: center 40%;" alt="Birch Grove">
+      <div class="p-overlay">
+        <div class="p-title">Birch Grove</div>
+        <div class="p-meta">Landscape · Black & White</div>
+      </div>
+      <span class="p-tag">New</span>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section id="shop">
+  <div class="shop-intro reveal">
+    <div>
+      <div class="section-label">Fine Art Prints</div>
+      <h2 class="section-title">Own the<br>Wilderness</h2>
+    </div>
+    <p class="shop-desc">
+      Each print is produced on 310gsm Baryta Satin paper with archival pigment inks,
+      rated 100+ years. Signed and numbered by the artist. Delivered flat in 
+      protective archival sleeves with a certificate of authenticity.
+    </p>
+  </div>
+
+  <div class="products-grid">
+
+    <div class="product-card reveal">
+      <div class="product-img-wrap">
+        <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/aurora-reflection.jpg" class="product-img" style="height:320px" alt="Aurora Reflection">
+        <span class="product-badge badge-limited">Limited — 3 Left</span>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Night Sky</div>
+        <div class="product-name">Aurora Reflection</div>
+        <div class="product-edition">Edition of 25 · 24×36 in</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">$380</div>
+            <div class="product-price-sub">Free worldwide shipping</div>
+          </div>
+          <button class="add-to-cart" onclick="addToCart('Aurora Reflection', 380, this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-1">
+      <div class="product-img-wrap">
+        <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/water-reflection.jpg" class="product-img" style="height:320px" alt="Water Reflection">
+        <span class="product-badge badge-new">New</span>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Landscape</div>
+        <div class="product-name">Water Reflection</div>
+        <div class="product-edition">Edition of 25 · 20×30 in</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">$260</div>
+            <div class="product-price-sub">Free worldwide shipping</div>
+          </div>
+          <button class="add-to-cart" onclick="addToCart('Water Reflection', 260, this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-2">
+      <div class="product-img-wrap">
+        <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/milky-way.jpg" class="product-img" style="height:320px" alt="Milky Way">
+      </div>
+      <div class="product-info">
+        <div class="product-category">Landscape</div>
+        <div class="product-name">Milky Way Road</div>
+        <div class="product-edition">Edition of 25 · 24×36 in</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">$320</div>
+            <div class="product-price-sub">Free worldwide shipping</div>
+          </div>
+          <button class="add-to-cart" onclick="addToCart('Milky Way Road', 320, this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-3">
+      <div class="product-img-wrap">
+        <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/circle-k.jpg" class="product-img" style="height:320px" alt="Circle K 2AM">
+        <span class="product-badge badge-limited">Sold Out</span>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Urban Noir</div>
+        <div class="product-name">Circle K, 2 AM</div>
+        <div class="product-edition">Edition of 25 · 16×24 in</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">$220</div>
+            <div class="product-price-sub">Waitlist available</div>
+          </div>
+          <button class="add-to-cart" disabled>Sold Out</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-1">
+      <div class="product-img-wrap">
+        <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/star-trails.jpg" class="product-img" style="height:320px" alt="Star Trails">
+        <span class="product-badge badge-new">New</span>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Landscape</div>
+        <div class="product-name">Star Trails</div>
+        <div class="product-edition">Edition of 25 · 30×40 in</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">$420</div>
+            <div class="product-price-sub">Free worldwide shipping</div>
+          </div>
+          <button class="add-to-cart" onclick="addToCart('Star Trails', 420, this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-1">
+      <div class="product-img-wrap">
+        <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/birch-trees.jpg" class="product-img" style="height:320px; object-position: center 30%;" alt="Birch Grove">
+        <span class="product-badge badge-new">New</span>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Landscape</div>
+        <div class="product-name">Birch Grove</div>
+        <div class="product-edition">Edition of 25 · 24×36 in</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">$290</div>
+            <div class="product-price-sub">Free worldwide shipping</div>
+          </div>
+          <button class="add-to-cart" onclick="addToCart('Birch Grove', 290, this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-2">
+      <div class="product-img-wrap">
+        <img src="https://raw.githubusercontent.com/imeverex/brandondeurbrouck.com/main/star-trails.jpg" class="product-img" style="height:320px" alt="Bundle Collection">
+      </div>
+      <div class="product-info">
+        <div class="product-category">Bundle</div>
+        <div class="product-name">Wilderness Collection × 3</div>
+        <div class="product-edition">Your choice of 3 prints</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">$820</div>
+            <div class="product-price-sub">Save $140 vs individual</div>
+          </div>
+          <button class="add-to-cart" onclick="addToCart('Wilderness Collection ×3', 820, this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual reveal">
+    <div class="about-photo-main">
+      <!-- Camera silhouette SVG inside -->
+      <svg style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.18" width="120" height="90" viewBox="0 0 120 90" fill="none">
+        <rect x="10" y="28" width="100" height="62" rx="8" fill="#3dd6c8"/>
+        <circle cx="60" cy="57" r="20" stroke="#3dd6c8" stroke-width="3" fill="none"/>
+        <circle cx="60" cy="57" r="12" stroke="#3dd6c8" stroke-width="2" fill="none"/>
+        <path d="M40 28 L47 10 H73 L80 28" stroke="#3dd6c8" stroke-width="3" fill="none"/>
+        <rect x="88" y="36" width="12" height="8" rx="2" fill="#3dd6c8"/>
+      </svg>
+    </div>
+    <div class="about-accent-box">
+      <strong>7+</strong>
+      <span>Years Behind<br>the Lens</span>
+    </div>
+    <div class="about-geo-line"></div>
+  </div>
+
+  <div class="about-text reveal reveal-delay-2">
+    <div class="section-label">The Photographer</div>
+    <h2 class="section-title">Hunting Light<br>in Wild Places</h2>
+    <p class="about-body">
+      I shoot in the early dark and the late cold. My work spans 
+      <strong>glacial rivers and alpine passes</strong>, star-saturated skies 
+      reflected in still mountain water, and the strange glow of 
+      <strong>neon against total darkness</strong> — the places where 
+      civilization ends and something older begins.
+    </p>
+    <p class="about-body">
+      Every print is shot, processed, and signed by me. 
+      <strong>No stock, no AI, no compromises.</strong> 
+      These are real moments from real terrain.
+    </p>
+    <a href="#contact" class="btn-primary">Commission a Print</a>
+    <div class="about-tags">
+      <span class="tag">Landscape</span>
+      <span class="tag">Night Sky</span>
+      <span class="tag">Urban Noir</span>
+      <span class="tag">Long Exposure</span>
+      <span class="tag">Astrophotography</span>
+      <span class="tag">Alberta, Canada</span>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="reviews-header reveal">
+    <div class="section-label">Collectors Say</div>
+    <h2 class="section-title">In Their Words</h2>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"The Aurora Reflection print arrived perfectly packaged and it's absolutely breathtaking on my wall. The tonal range in those deep purples and pinks — you can feel the cold in it."</p>
+      <div class="review-author">
+        <div class="review-avatar">MK</div>
+        <div>
+          <div class="review-name">Morgan K.</div>
+          <div class="review-loc">Vancouver, BC</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal reveal-delay-1">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Bought the Alpine River print as a gift and had to order one for myself. The long-exposure water looks almost tactile — like you could reach in. Print quality is flawless."</p>
+      <div class="review-author">
+        <div class="review-avatar">TL</div>
+        <div>
+          <div class="review-name">Tyler L.</div>
+          <div class="review-loc">Portland, OR</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal reveal-delay-2">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Circle K 2AM is one of the most quietly unsettling photos I've seen. The neon against all that dark — it says something about modern loneliness. A real conversation piece."</p>
+      <div class="review-author">
+        <div class="review-avatar">SH</div>
+        <div>
+          <div class="review-name">Sofia H.</div>
+          <div class="review-loc">Brooklyn, NY</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-left reveal">
+    <div class="section-label">Get in Touch</div>
+    <h2 class="section-title">Commission, License,<br>or Just Say Hello</h2>
+    <p>
+      Looking for a custom size, a licensing agreement for commercial use, 
+      or want to discuss a location-specific commission? I'd love to hear from you.
+      Turnaround on inquiries is typically within 48 hours.
+    </p>
+    <div class="contact-info-item">
+      <div class="contact-info-icon">✉</div>
+      <div class="contact-info-text"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8ee6ebe2e2e1ceecfee7edfda0ede1e3">[email&#160;protected]</a></div>
+    </div>
+    <div class="contact-info-item">
+      <div class="contact-info-icon">📍</div>
+      <div class="contact-info-text">Alberta, Canada — Ships Worldwide</div>
+    </div>
+    <div class="contact-info-item">
+      <div class="contact-info-icon">📷</div>
+      <div class="contact-info-text">@bpics.com on Instagram</div>
+    </div>
+  </div>
+
+  <form class="contact-form reveal reveal-delay-2" id="contactForm" onsubmit="submitForm(event)">
+    <div class="form-row">
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text" placeholder="Alex" required />
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" placeholder="Smith" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" placeholder="you@example.com" required />
+    </div>
+    <div class="form-group">
+      <label>Subject</label>
+      <select>
+        <option value="">Select one</option>
+        <option>Purchase inquiry</option>
+        <option>Custom size request</option>
+        <option>Commercial licensing</option>
+        <option>Commission a shoot</option>
+        <option>Waitlist for sold-out print</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Message</label>
+      <textarea placeholder="Tell me what you're looking for..."></textarea>
+    </div>
+    <button type="submit" class="form-submit">Send Message →</button>
+    <div class="form-success" id="formSuccess">
+      ✓ Message sent — I'll be in touch within 48 hours.
+    </div>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="#" class="nav-logo">Brandon <span>Deurbrouck</span></a>
+    <p>Fine art photography prints by Brandon Deurbrouck — Canadian wilderness and beyond. Limited editions. Museum quality. Real moments.</p>
+    <div class="social-links">
+      <a href="#" class="social-link" title="Instagram">IG</a>
+      <a href="#" class="social-link" title="500px">5C</a>
+      <a href="#" class="social-link" title="Pinterest">PT</a>
+    </div>
+  </div>
+  <div class="footer-col">
+    <h4>Shop</h4>
+    <ul>
+      <li><a href="#shop">All Prints</a></li>
+      <li><a href="#shop">Landscape</a></li>
+      <li><a href="#shop">Night Sky</a></li>
+      <li><a href="#shop">Urban Noir</a></li>
+      <li><a href="#shop">Bundles</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Info</h4>
+    <ul>
+      <li><a href="#about">About the Artist</a></li>
+      <li><a href="#contact">Commission</a></li>
+      <li><a href="#">Shipping Policy</a></li>
+      <li><a href="#">Returns</a></li>
+      <li><a href="#">Licensing</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Editions</h4>
+    <ul>
+      <li><a href="#">What is Giclée?</a></li>
+      <li><a href="#">Certificate of Auth.</a></li>
+      <li><a href="#">Print Sizes Guide</a></li>
+      <li><a href="#">Framing Tips</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 <a href="#">Brandon Deurbrouck</a> — All rights reserved. All photographs are original works.</p>
+    <p>Prints ship from Alberta, Canada · Worldwide delivery</p>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close">ESC to close</button>
+  <div class="lightbox-content" onclick="event.stopPropagation()">
+    <div class="lightbox-img-container">
+      <img id="lightboxImg" src="" alt="" style="width:auto; max-width:80vw; max-height:75vh; display:block; object-fit:contain;">
+      <div style="margin-top:16px; text-align:center;">
+        <div style="font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; color:var(--snow);" id="lightboxTitle"></div>
+        <div style="font-family:'Barlow',sans-serif; color:var(--steel); margin-top:6px; font-size:0.85rem;" id="lightboxSub"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── CURSOR ───
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+  });
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a,button,.p-item,.product-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width = '60px'; ring.style.height = '60px';
+      ring.style.borderColor = 'rgba(212,61,140,0.6)';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width = '36px'; ring.style.height = '36px';
+      ring.style.borderColor = 'rgba(61,214,200,0.5)';
+    });
+  });
+
+  // ─── STARS ───
+  const canvas = document.getElementById('starsCanvas');
+  const ctx = canvas.getContext('2d');
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const stars = Array.from({length: 220}, () => ({
+    x: Math.random(), y: Math.random() * 0.75,
+    r: Math.random() * 1.4 + 0.2,
+    a: Math.random(),
+    speed: Math.random() * 0.004 + 0.001,
+    phase: Math.random() * Math.PI * 2
+  }));
+
+  function drawStars(t) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      const alpha = s.a * (0.5 + 0.5 * Math.sin(t * s.speed * 40 + s.phase));
+      ctx.beginPath();
+      ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(220,240,255,${alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+  requestAnimationFrame(drawStars);
+
+  // ─── NAVBAR SCROLL ───
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ─── REVEAL ON SCROLL ───
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => revealObs.observe(r));
+
+  // ─── PORTFOLIO FILTER ───
+  function filterPortfolio(cat, btn) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.p-item').forEach(item => {
+      const show = cat === 'all' || item.dataset.cat === cat;
+      item.style.opacity = show ? '1' : '0.15';
+      item.style.pointerEvents = show ? 'auto' : 'none';
+    });
+  }
+
+  // ─── CART ───
+  let cart = [];
+  function addToCart(name, price, btn) {
+    cart.push({name, price});
+    updateCart();
+    showToast(name);
+    btn.textContent = '✓ Added';
+    btn.style.background = 'rgba(61,214,200,0.15)';
+    btn.style.color = 'var(--teal)';
+    setTimeout(() => {
+      btn.textContent = 'Add to Cart';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2500);
+  }
+  function updateCart() {
+    const count = cart.length;
+    const total = cart.reduce((a,b) => a + b.price, 0);
+    const countEl = document.getElementById('cartCount');
+    countEl.textContent = count;
+    countEl.classList.toggle('active', count > 0);
+    document.getElementById('cartTotal').textContent = '$' + total.toLocaleString();
+    const itemsEl = document.getElementById('cartItems');
+    if (cart.length === 0) {
+      itemsEl.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+      return;
+    }
+    itemsEl.innerHTML = cart.map((item, i) => `
+      <div class="cart-item">
+        <div class="cart-item-img" style="background:url(aurora-reflection.jpg) center/cover"></div>
+        <div>
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-sub">Fine Art Print · Ed. 25</div>
+        </div>
+        <div class="cart-item-price">$${item.price}</div>
+      </div>
+    `).join('');
+  }
+  function openCart() {
+    document.getElementById('cartDrawer').classList.add('open');
+    document.getElementById('cartBackdrop').classList.add('open');
+  }
+  function closeCart() {
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.getElementById('cartBackdrop').classList.remove('open');
+  }
+
+  function showToast(name) {
+    document.getElementById('toastItem').textContent = name;
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  // ─── LIGHTBOX ───
+  const photoMap = {
+    'Aurora Reflection': 'aurora-reflection.jpg',
+    'Circle K, 2 AM': 'circle-k.jpg',
+    'Star Trails': 'star-trails.jpg',
+    'Birch Grove': 'birch-trees.jpg',
+    'Milky Way Road': 'milky-way.jpg',
+    'Water Reflection': 'water-reflection.jpg',
+    'Alpine River — Winter': 'water-reflection.jpg',
+    'Storm Over the Lake': 'milky-way.jpg',
+    'Layered Horizons': 'star-trails.jpg',
+  };
+  function openLightbox(title, sub) {
+    document.getElementById('lightboxTitle').textContent = title;
+    document.getElementById('lightboxSub').textContent = sub;
+    const img = document.getElementById('lightboxImg');
+    for (const [key, src] of Object.entries(photoMap)) {
+      if (title.includes(key) || key.includes(title.split('—')[0].trim())) {
+        img.src = src; break;
+      }
+    }
+    if (!img.src || img.src === window.location.href) img.src = 'aurora-reflection.jpg';
+    const lb = document.getElementById('lightbox');
+    lb.style.display = 'flex';
+    setTimeout(() => lb.style.opacity = '1', 10);
+  }
+  function closeLightbox() {
+    const lb = document.getElementById('lightbox');
+    lb.style.opacity = '0';
+    setTimeout(() => { lb.style.display = 'none'; }, 300);
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // ─── CONTACT FORM ───
+  function submitForm(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.form-s
